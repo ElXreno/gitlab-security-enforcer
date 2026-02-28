@@ -16,6 +16,13 @@ import (
 
 const requestTimeout = 10 * time.Second
 
+var securitySettingsRetryBackoffs = []time.Duration{
+	250 * time.Millisecond,
+	500 * time.Millisecond,
+	1 * time.Second,
+	2 * time.Second,
+}
+
 type Client struct {
 	baseURL    string
 	token      string
@@ -55,7 +62,7 @@ func (c *Client) enableSecretPushProtection(ctx context.Context, projectID int) 
 		"secret_push_protection_enabled": true,
 	}
 
-	_, err := c.doJSON(ctx, http.MethodPut, path, payload)
+	_, err := c.doJSONWithRetry(ctx, http.MethodPut, path, payload, securitySettingsRetryBackoffs)
 	if err != nil {
 		c.logger.Error("failed to enable secret push protection", "project_id", projectID, "error", err)
 		return err
@@ -118,4 +125,43 @@ func (c *Client) doJSON(ctx context.Context, method, path string, payload any) (
 
 	body, _ := io.ReadAll(io.LimitReader(resp.Body, 2048))
 	return resp.StatusCode, fmt.Errorf("gitlab api %s %s returned %d: %s", method, path, resp.StatusCode, strings.TrimSpace(string(body)))
+}
+
+func (c *Client) doJSONWithRetry(ctx context.Context, method, path string, payload any, backoffs []time.Duration) (int, error) {
+	lastStatus := 0
+	lastErr := error(nil)
+
+	for attempt := 0; attempt <= len(backoffs); attempt++ {
+		statusCode, err := c.doJSON(ctx, method, path, payload)
+		if err == nil {
+			return statusCode, nil
+		}
+
+		lastStatus = statusCode
+		lastErr = err
+
+		if !isRetryableStatus(statusCode) || attempt == len(backoffs) {
+			break
+		}
+
+		delay := backoffs[attempt]
+		c.logger.Warn("gitlab call failed, retrying", "method", method, "path", path, "status_code", statusCode, "attempt", attempt+1, "next_retry_in", delay.String())
+
+		timer := time.NewTimer(delay)
+		select {
+		case <-ctx.Done():
+			timer.Stop()
+			return lastStatus, fmt.Errorf("context canceled while waiting to retry %s %s: %w", method, path, ctx.Err())
+		case <-timer.C:
+		}
+	}
+
+	return lastStatus, lastErr
+}
+
+func isRetryableStatus(statusCode int) bool {
+	return statusCode == http.StatusNotFound ||
+		statusCode == http.StatusConflict ||
+		statusCode == http.StatusTooManyRequests ||
+		statusCode >= http.StatusInternalServerError
 }
