@@ -1,0 +1,4 @@
+/.direnv
+/result
+/gitlab-security-enforcer
+.env

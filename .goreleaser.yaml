@@ -1,0 +1,39 @@
+version: 2
+project_name: gitlab-security-enforcer
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: gitlab-security-enforcer
+    main: ./cmd/server
+    binary: gitlab-security-enforcer
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - amd64
+    ldflags:
+      - -s -w
+
+archives:
+  - formats: [tar.gz]
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    files:
+      - README.md
+
+nfpms:
+  - id: packages
+    package_name: gitlab-security-enforcer
+    file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Arch }}"
+    maintainer: "gitlab-security-enforcer maintainers"
+    description: "GitLab System Hook receiver that enforces project security settings"
+    license: "MIT"
+    formats:
+      - deb
+      - rpm
+
+release:
+  use_existing_draft: true
