@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/ElXreno/gitlab-security-enforcer/compare/v0.1.1...v0.1.2) (2026-02-28)
+
+
+### Bug Fixes
+
+* retry transient gitlab project readiness errors ([4ef1445](https://github.com/ElXreno/gitlab-security-enforcer/commit/4ef144557cad12e4d5a5c43241d27943b96052d3))
+
 ## [0.1.1](https://github.com/ElXreno/gitlab-security-enforcer/compare/v0.1.0...v0.1.1) (2026-02-28)
 
 
