@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/ElXreno/gitlab-security-enforcer/compare/v0.1.2...v0.1.3) (2026-02-28)
+
+
+### Bug Fixes
+
+* better logging ([4843401](https://github.com/ElXreno/gitlab-security-enforcer/commit/48434012786d1313b4883106297283eeabb18d37))
+
 ## [0.1.2](https://github.com/ElXreno/gitlab-security-enforcer/compare/v0.1.1...v0.1.2) (2026-02-28)
 
 
