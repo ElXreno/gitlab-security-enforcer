@@ -53,6 +53,7 @@ func (c *Client) SecureProject(ctx context.Context, projectID int) error {
 		return err
 	}
 
+	c.logger.Info("successfully enforced project security settings", "project_id", projectID)
 	return nil
 }
 
@@ -93,6 +94,7 @@ func (c *Client) enablePreventSecretsPushRule(ctx context.Context, projectID int
 		c.logger.Error("failed to create push rule with POST", "project_id", projectID, "error", err)
 		return err
 	}
+	c.logger.Info("successfully created push rule with POST fallback", "project_id", projectID)
 
 	return nil
 }
