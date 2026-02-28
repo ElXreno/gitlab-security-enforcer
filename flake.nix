@@ -24,7 +24,7 @@
             src = self;
             subPackages = [ "cmd/server" ];
 
-            vendorHash = "sha256-gu2NwS6I7oUbyMNipjeC/fOsvDSyo2GbC6U8gSB1dF0=";
+            vendorHash = "sha256-ESDlS0rcuyBPU1lQNkiz52VNKVRDefyFUUKOsaKwsek=";
 
             postInstall = ''
               if [ -f "$out/bin/server" ]; then
