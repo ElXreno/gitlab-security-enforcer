@@ -19,7 +19,7 @@
         {
           default = pkgs.buildGoModule {
             pname = "gitlab-security-enforcer";
-            version = "0.1.0"; # x-release-please-version
+            version = "0.1.1"; # x-release-please-version
 
             src = self;
             subPackages = [ "cmd/server" ];
