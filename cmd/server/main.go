@@ -8,6 +8,9 @@ import (
 	"syscall"
 	"time"
 
+	_ "github.com/KimMachineGun/automemlimit"
+	_ "go.uber.org/automaxprocs"
+
 	"github.com/ElXreno/gitlab-security-enforcer/internal/config"
 	"github.com/ElXreno/gitlab-security-enforcer/internal/gitlab"
 	"github.com/ElXreno/gitlab-security-enforcer/internal/handler"
