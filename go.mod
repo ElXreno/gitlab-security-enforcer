@@ -5,7 +5,7 @@ go 1.25.0
 require (
 	github.com/KimMachineGun/automemlimit v0.7.5
 	github.com/caarlos0/env/v11 v11.4.0
-	github.com/gofiber/fiber/v2 v2.52.12
+	github.com/gofiber/fiber/v2 v2.52.13
 	github.com/joho/godotenv v1.5.1
 	go.uber.org/automaxprocs v1.6.0
 )
